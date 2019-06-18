@@ -2,7 +2,8 @@ const selectAllButton = document.getElementById('test')
 const inputElement = document.getElementById('input')
 const ulElement = document.getElementById('list')
 
-todoList = []
+//const todoList = []
+let todoList = []
 
 
 
@@ -14,7 +15,8 @@ inputElement.addEventListener('keydown', event =>{
     if(event.key==='Enter' || event.keyCode===13){
     todoList.unshift({
         content: inputElement.value,
-        done: false
+        done: false,
+        selected: false
     })
 
 
@@ -43,6 +45,7 @@ function upgradeView() {
         checkboxElement.type = 'checkbox'
         checkboxElement.className = 'form-check-input'
         checkboxElement.id = 'todoItem' + index
+        checkboxElement.checked = todoItem.selected
 
         const labelElement = document.createElement('label')
         divElement.append(labelElement)
@@ -70,9 +73,45 @@ function upgradeView() {
         upgradeView() //обновляем
         })
 
+        checkboxElement.addEventListener('change', () => {
+        todoItem.selected = checkboxElement.checked
+
+        })
+
         }
 }
 
 
+document.getElementById('doneAction').addEventListener('click', () => {
+    for (const todoItem of todoList )
+        if (todoItem.selected){
+        todoItem.done = true
+        todoItem.selected = false
+        }
+        upgradeView()
+})
 
+document.getElementById('restoreAction').addEventListener('click', () => {
+    for (const todoItem of todoList )
+        if (todoItem.selected){
+        todoItem.done = false
+        todoItem.selected = false
+        }
+        upgradeView()
+})
+
+
+document.getElementById('removeAction').addEventListener('click', () => {
+    todoList = todoList.filter(todoItem => !todoItem.selected)
+
+    
+
+//    for (const todoItem of todoList )
+//        if (todoItem.selected){
+//        todoItem.done = false
+//        todoItem.selected = false
+//        }
+
+    upgradeView()
+})
 
