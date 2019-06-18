@@ -3,7 +3,7 @@ const inputElement = document.getElementById('input')
 const ulElement = document.getElementById('list')
 
 todoList = []
-//upgradeView()
+
 
 
 selectAllButton.addEventListener('click',() =>{
@@ -12,10 +12,13 @@ selectAllButton.addEventListener('click',() =>{
 
 inputElement.addEventListener('keydown', event =>{
     if(event.key==='Enter' || event.keyCode===13){
-    todoList.unshift(inputElement.value)
-//    todoList.push(inputElement.value)
-    inputElement.value = ''
+    todoList.unshift({
+        content: inputElement.value,
+        done: false
+    })
 
+
+    inputElement.value = ''
     upgradeView()
     }
 
@@ -23,7 +26,10 @@ inputElement.addEventListener('keydown', event =>{
 
 function upgradeView() {
     ulElement.innerHTML = ''
-    for (const todoItem of todoList){
+//    for (const todoItem of todoList){
+        for (let index = 0; index < todoList.length; index++){
+        const todoItem = todoList[index]
+
         const liElement = document.createElement('li')
         liElement.className = "list-group-item"
         ulElement.append(liElement)
@@ -36,12 +42,16 @@ function upgradeView() {
         divElement.append(checkboxElement)
         checkboxElement.type = 'checkbox'
         checkboxElement.className = 'form-check-input'
+        checkboxElement.id = 'todoItem' + index
 
         const labelElement = document.createElement('label')
         divElement.append(labelElement)
         labelElement.className = 'form-check-label'
-        labelElement.setAttribute = ('for', 'exampleCheck1')
-        labelElement.innerText = todoItem
+        if (todoItem.done){
+            labelElement.className += ' todoDone'
+        }
+        labelElement.setAttribute('for', 'todoItem' + index)
+        labelElement.innerText = todoItem.content
 
         const buttonDoneElement = document.createElement('button')
         divElement.append(buttonDoneElement)
@@ -54,6 +64,12 @@ function upgradeView() {
         buttonRemoveElement.type = 'button'
         buttonRemoveElement.className = 'btn btn-outline-primary'
         buttonRemoveElement.innerText = 'Remove'
+
+        buttonDoneElement.addEventListener('click', () =>{
+        todoItem.done = !todoItem.done  //меняем на противоположный
+        upgradeView() //обновляем
+        })
+
         }
 }
 
