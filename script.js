@@ -6,11 +6,6 @@ const ulElement = document.getElementById('list')
 let todoList = []
 
 
-
-selectAllButton.addEventListener('click',() =>{
-    console.log('fired')
-})
-
 inputElement.addEventListener('keydown', event =>{
     if(event.key==='Enter' || event.keyCode===13){
     todoList.unshift({
@@ -78,7 +73,18 @@ function upgradeView() {
 
         })
 
-        }
+        buttonRemoveElement.addEventListener('click', () => {
+            todoList = todoList.filter (
+            currentTodoItem => currentTodoItem !== todoItem )
+
+            upgradeView()
+
+//            const todoItemIndex = todoList.indexof(todoItem)
+//            todoList.slice(todoItemIndex, todoItemIndex + 1)
+
+        })
+
+      }
 }
 
 
@@ -104,14 +110,14 @@ document.getElementById('restoreAction').addEventListener('click', () => {
 document.getElementById('removeAction').addEventListener('click', () => {
     todoList = todoList.filter(todoItem => !todoItem.selected)
 
-    
-
-//    for (const todoItem of todoList )
-//        if (todoItem.selected){
-//        todoItem.done = false
-//        todoItem.selected = false
-//        }
-
     upgradeView()
 })
 
+document.getElementById('test').addEventListener('click', () => {
+    for (const todoItem of todoList ){
+       todoItem.selected = true
+        }
+
+    upgradeView()
+
+})
