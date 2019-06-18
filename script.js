@@ -5,9 +5,11 @@ const ulElement = document.getElementById('list')
 //const todoList = []
 let todoList = []
 
+actionPanel2.style.display = 'none'            // не удаляем из DOM а скрываем
+
 
 inputElement.addEventListener('keydown', event =>{
-    if(event.key==='Enter' || event.keyCode===13){
+    if((event.key==='Enter' || event.keyCode===13)&&(inputElement.value)){
     todoList.unshift({
         content: inputElement.value,
         done: false,
@@ -51,39 +53,52 @@ function upgradeView() {
         labelElement.setAttribute('for', 'todoItem' + index)
         labelElement.innerText = todoItem.content
 
-        const buttonDoneElement = document.createElement('button')
-        divElement.append(buttonDoneElement)
-        buttonDoneElement.type = 'button'
-        buttonDoneElement.className = 'btn btn-outline-primary'
-        buttonDoneElement.innerText = 'Done'
 
-        const buttonRemoveElement = document.createElement('button')
-        divElement.append(buttonRemoveElement)
-        buttonRemoveElement.type = 'button'
-        buttonRemoveElement.className = 'btn btn-outline-primary'
-        buttonRemoveElement.innerText = 'Remove'
+        if (!todoItem.done){                                        //если элемент не выполнен то мы эту кнопку добавим
+            const buttonDoneElement = document.createElement('button')
+            divElement.append(buttonDoneElement)
+            buttonDoneElement.type = 'button'
+            buttonDoneElement.className = 'btn btn-outline-primary'
+            buttonDoneElement.innerText = 'Done'
+            buttonDoneElement.style = 'float: right'
 
-        buttonDoneElement.addEventListener('click', () =>{
-        todoItem.done = !todoItem.done  //меняем на противоположный
-        upgradeView() //обновляем
-        })
+             buttonDoneElement.addEventListener('click', () =>{        //обработчик событий
+                todoItem.done = !todoItem.done  //меняем на противоположный
+                upgradeView() //обновляем
+           })
+
+        }
+
+        else {                                                        //если элемент выполнен то мы эту кнопку добавим
+            const buttonRemoveElement = document.createElement('button')
+            divElement.append(buttonRemoveElement)
+            buttonRemoveElement.type = 'button'
+            buttonRemoveElement.className = 'btn btn-outline-primary'
+            buttonRemoveElement.innerText = 'Remove'
+            buttonRemoveElement.style = 'float: right'
+
+            buttonRemoveElement.addEventListener('click', () => {          //обработчик событий
+                todoList = todoList.filter (
+                currentTodoItem => currentTodoItem !== todoItem )
+                upgradeView()
+           })
+        }
 
         checkboxElement.addEventListener('change', () => {
         todoItem.selected = checkboxElement.checked
+        upgradeView()
 
         })
+      }
+      const someSelected = todoList.some(todoItem => todoItem.selected)
+      if (someSelected) {
+        actionPanel1.style.display = 'none'
+        actionPanel2.style.display = 'block'
+      }
 
-        buttonRemoveElement.addEventListener('click', () => {
-            todoList = todoList.filter (
-            currentTodoItem => currentTodoItem !== todoItem )
-
-            upgradeView()
-
-//            const todoItemIndex = todoList.indexof(todoItem)
-//            todoList.slice(todoItemIndex, todoItemIndex + 1)
-
-        })
-
+      else {
+         actionPanel1.style.display = 'flex'
+         actionPanel2.style.display = 'none'
       }
 }
 
